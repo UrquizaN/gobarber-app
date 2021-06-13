@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { FormHandles } from '@unform/core';
@@ -13,6 +13,7 @@ import logoImg from '../../assets/logo.png';
 import {Container, Title, ForgotPassword, ForgotPasswordText, CreateAccountButton, CreateAccountButtonText } from './styles';
 
 const SignIn: React.FC = () => {
+  const passwordInputRef = useRef<TextInput>(null)
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
@@ -36,8 +37,28 @@ const SignIn: React.FC = () => {
               <Title>Faça seu logon</Title>
 
             <Form onSubmit={handleSubmit} ref={formRef}>
-              <Input name="email" icon="mail" placeholder="Email" />
-              <Input name="password" icon="lock" placeholder="Senha" />
+              <Input
+                name="email"
+                icon="mail"
+                placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="next"
+                autoCorrect={false}
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={passwordInputRef}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                secureTextEntry
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm();
+                }}
+              />
             </Form>
 
             <Button onPress={() => {
