@@ -7,6 +7,8 @@ import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErros';
 
+import {useAuth} from '../../hooks/auth';
+
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 
@@ -22,8 +24,11 @@ interface SignInFormData {
 
 const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null)
-  const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
+
+  const navigation = useNavigation();
+
+  const { signIn } = useAuth();
 
   const handleSubmit = useCallback(async (data: SignInFormData) => {
     try {
@@ -38,10 +43,10 @@ const SignIn: React.FC = () => {
         abortEarly: false,
       });
 
-      // await signIn({
-      //   email: data.email,
-      //   password: data.password,
-      // });
+      await signIn({
+        email: data.email,
+        password: data.password,
+      });
 
       // history.push('/dashboard');
     } catch (err) {
